@@ -1,7 +1,7 @@
 package com.hexaware.Controller;
 
 import com.hexaware.DTO.EmployeeDTO;
-
+import com.hexaware.Entity.Department;
 import com.hexaware.Entity.Employee;
 import com.hexaware.Entity.Leaves;
 

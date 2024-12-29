@@ -16,6 +16,9 @@ public interface UserRepo extends JpaRepository<Users, Integer> {
 	@Query("SELECT u FROM Users u WHERE u.username = :username")
 	Users findByUsername(@Param("username") String username);
 	
+	@Query(value="select * from Users u where u.user_id=?1",nativeQuery = true )
+	Users findByUserId(@Param("user_id") int user_id);
+	
 	@Query("Select count(u) from Users u where u.role='EMPLOYEE'")
     long countTotalEmployees();
 	

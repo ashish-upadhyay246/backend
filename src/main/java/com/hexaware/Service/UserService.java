@@ -102,12 +102,14 @@ public class UserService{
     public EmployeeDTO createEmployee(EmployeeDTO employeeDTO) {
         
         Employee employee = mp.map(employeeDTO, Employee.class);
-        Department d=departmentRepo.findById(employeeDTO.getDepartmentId()).get();
+        Department d=departmentRepo.findByDeptId(employeeDTO.getDepartmentId());
         employee.setDepartment(d);
         Employee savedEmployee = employeeRepo.save(employee);
 
         return mp.map(savedEmployee, EmployeeDTO.class);
     }
+    
+    
 
     //get all users
     public List<Users> admin_showAll() {
@@ -121,7 +123,7 @@ public class UserService{
 
     //get specific user
     public Users admin_getDataById(int userID) {
-        Users user = rep.findById(userID).orElse(null);
+        Users user = rep.findByUserId(userID);
         return user;
     }
     
@@ -236,5 +238,10 @@ public class UserService{
 	public Users getUserByUsername(String name) {
 		return rep.getUserByUsername(name);
 
+	}
+
+	public Department getDept(int id) {
+		
+		return departmentRepo.findByDeptId(id);
 	}
 }

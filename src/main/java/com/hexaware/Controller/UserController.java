@@ -3,6 +3,7 @@ package com.hexaware.Controller;
 import com.hexaware.DTO.EmployeeDTO;
 
 import com.hexaware.DTO.UserDTO;
+import com.hexaware.Entity.Department;
 import com.hexaware.Entity.Employee;
 import com.hexaware.Entity.Leaves;
 import com.hexaware.Entity.Users;
@@ -132,11 +133,12 @@ public class UserController {
 
     //get specific user
     @GetMapping("/admin_getUserData/{userID}")
-    public ResponseEntity<UserDTO> getById(@PathVariable int userID) {
+    public ResponseEntity<?> getById(@PathVariable int userID) {
         Users userObj = ser.admin_getDataById(userID);
-        if (userObj == null) {
+        System.out.println(userObj);
+        if (userObj != null) {
         	UserDTO x=mp.map(userObj, UserDTO.class);
-        	return new ResponseEntity<>(x, HttpStatus.OK);
+        	return new ResponseEntity<>(userObj, HttpStatus.OK);
         }
         else {
         	throw new UserNotFoundException("User with ID '" + userID + "' not found");
@@ -239,5 +241,17 @@ public class UserController {
             throw new UserNotFoundException("User with ID '" + userID + "' not found");
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+    @GetMapping("/dept/{id}")
+    public ResponseEntity<?> fetchDept (@PathVariable int id) {
+    	Department d = ser.getDept(id);
+    	if (d!=null)
+    	{
+    		return new ResponseEntity<>(d, HttpStatus.OK);
+    	}
+    	else {
+    		throw new UserNotFoundException("User with ID '" + id + "' not found");
+    	}
     }
 }
