@@ -32,147 +32,123 @@ public class Employee {
 
     @Column(name = "salary", nullable = false)
     private double salary;
-    
+
+    @Column(name = "leaves_left")
     private int leavesLeft;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "dept_id", referencedColumnName = "dept_id") 
+    @JoinColumn(name = "dept_id", referencedColumnName = "dept_id")
     private Department department;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.CASCADE)  // Ensure cascading delete when user is deleted
     private Users user;
-
 
     // Constructors
     public Employee() {
     }
 
+    public Employee(int empId, String firstName, String lastName, String email, String phoneNumber, Date hireDate,
+                    double salary, int leavesLeft, Department department, Users user) {
+        super();
+        this.empId = empId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.hireDate = hireDate;
+        this.salary = salary;
+        this.leavesLeft = leavesLeft;
+        this.department = department;
+        this.user = user;
+    }
 
-	public Employee(int empId, String firstName, String lastName, String email, String phoneNumber, Date hireDate,
-			double salary, int leavesLeft, Department department, Users user) {
-		super();
-		this.empId = empId;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.phoneNumber = phoneNumber;
-		this.hireDate = hireDate;
-		this.salary = salary;
-		this.leavesLeft = leavesLeft;
-		this.department = department;
-		this.user = user;
-	}
+    // Getters and Setters
+    public int getEmpId() {
+        return empId;
+    }
 
+    public void setEmpId(int empId) {
+        this.empId = empId;
+    }
 
-	public int getEmpId() {
-		return empId;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public void setEmpId(int empId) {
-		this.empId = empId;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public String getEmail() {
+        return email;
+    }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public Date getHireDate() {
+        return hireDate;
+    }
 
+    public void setHireDate(Date hireDate) {
+        this.hireDate = hireDate;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public double getSalary() {
+        return salary;
+    }
 
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public int getLeavesLeft() {
+        return leavesLeft;
+    }
 
+    public void setLeavesLeft(int leavesLeft) {
+        this.leavesLeft = leavesLeft;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public Department getDepartment() {
+        return department;
+    }
 
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
+    public Users getUser() {
+        return user;
+    }
 
+    public void setUser(Users user) {
+        this.user = user;
+    }
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
-
-	public Date getHireDate() {
-		return hireDate;
-	}
-
-
-	public void setHireDate(Date hireDate) {
-		this.hireDate = hireDate;
-	}
-
-
-	public double getSalary() {
-		return salary;
-	}
-
-
-	public void setSalary(double salary) {
-		this.salary = salary;
-	}
-
-
-	public int getLeavesLeft() {
-		return leavesLeft;
-	}
-
-
-	public void setLeavesLeft(int leavesLeft) {
-		this.leavesLeft = leavesLeft;
-	}
-
-
-	public Department getDepartment() {
-		return department;
-	}
-
-
-	public void setDepartment(Department department) {
-		this.department = department;
-	}
-
-
-	public Users getUser() {
-		return user;
-	}
-
-
-	public void setUser(Users user) {
-		this.user = user;
-	}
-
-
-	@Override
-	public String toString() {
-		return "Employee [empId=" + empId + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-				+ ", phoneNumber=" + phoneNumber + ", hireDate=" + hireDate + ", salary=" + salary + ", leavesLeft="
-				+ leavesLeft + ", department=" + department + ", user=" + user + "]";
-	}
-    
-    
-
+    @Override
+    public String toString() {
+        return "Employee [empId=" + empId + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+                + ", phoneNumber=" + phoneNumber + ", hireDate=" + hireDate + ", salary=" + salary + ", leavesLeft="
+                + leavesLeft + ", department=" + department + ", user=" + user + "]";
+    }
 }

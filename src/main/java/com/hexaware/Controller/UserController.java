@@ -243,6 +243,16 @@ public class UserController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     
+    //remove employee
+    @DeleteMapping("/admin_removeEmp/{empID}")
+    public ResponseEntity<String> admin_removeEmp(@PathVariable int empID) {
+        String result = ser.admin_removeEmp(empID);
+        if (result.equals("Employee not found")) {
+            throw new UserNotFoundException("Employee with ID '" + empID + "' not found");
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
     @GetMapping("/dept/{id}")
     public ResponseEntity<?> fetchDept (@PathVariable int id) {
     	Department d = ser.getDept(id);

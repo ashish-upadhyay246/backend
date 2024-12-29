@@ -6,6 +6,7 @@ import com.hexaware.DTO.UserDTO;
 import com.hexaware.Entity.Department;
 import com.hexaware.Entity.Employee;
 import com.hexaware.Entity.Leaves;
+import com.hexaware.Entity.Leaves.LeaveStatus;
 import com.hexaware.Entity.Users;
 import com.hexaware.Entity.Users.Role;
 import com.hexaware.Repository.DepartmentRepo;
@@ -181,14 +182,17 @@ public class UserService{
         if (leave == null) {
             throw new RuntimeException("Leave request not found");
         }
+        Employee employee = leave.getEmployee();
         if (approved) {
-            leave.approve(); 
+            leave.setStatus(LeaveStatus.APPROVED);
+            employee.setLeavesLeft(employee.getLeavesLeft() - leave.getDays()); // Update leavesLeft
         } else {
-            leave.reject(); 
+            leave.setStatus(LeaveStatus.REJECTED);
         }
-
+        employeeRepo.save(employee);
         return leaveRepo.save(leave);
     }
+
     
     //update department of employee
     public void updateEmployeeDepartment(int employeeId, int departmentId) {
@@ -244,4 +248,14 @@ public class UserService{
 		
 		return departmentRepo.findByDeptId(id);
 	}
+
+	//remove employee
+    public String admin_removeEmp(int empID) {
+        Employee e = employeeRepo.findById(empID).orElse(null);
+        if (e == null) {
+            return "Employee does not exist.";
+        }
+        rep.deleteById(empID);
+        return "Employee removed successfully";
+    }
 }

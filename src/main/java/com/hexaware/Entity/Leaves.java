@@ -1,5 +1,7 @@
 package com.hexaware.Entity;
 
+import java.sql.Date;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -23,6 +25,8 @@ public class Leaves {
 
     @Column(name = "end_date", nullable = false)
     private java.sql.Date endDate;
+    
+    private int days;
 
     @Column(name = "status", length = 20, nullable = false)
     @Enumerated(EnumType.STRING)
@@ -39,67 +43,73 @@ public class Leaves {
     public Leaves() {
     }
 
-    public Leaves(Employee employee, String leaveType, java.sql.Date startDate, java.sql.Date endDate, LeaveStatus status) {
-        this.employee = employee;
-        this.leaveType = leaveType;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.status = status;
-    }
+	public Leaves(int leaveId, Employee employee, String leaveType, Date startDate, Date endDate, int days,
+			LeaveStatus status) {
+		super();
+		this.leaveId = leaveId;
+		this.employee = employee;
+		this.leaveType = leaveType;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.days = days;
+		this.status = status;
+	}
 
-    // Getters and Setters
-    public int getLeaveId() {
-        return leaveId;
-    }
+	public int getLeaveId() {
+		return leaveId;
+	}
 
-    public void setLeaveId(int leaveId) {
-        this.leaveId = leaveId;
-    }
+	public void setLeaveId(int leaveId) {
+		this.leaveId = leaveId;
+	}
 
-    public Employee getEmployee() {
-        return employee;
-    }
+	public Employee getEmployee() {
+		return employee;
+	}
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+	}
 
-    public String getLeaveType() {
-        return leaveType;
-    }
+	public String getLeaveType() {
+		return leaveType;
+	}
 
-    public void setLeaveType(String leaveType) {
-        this.leaveType = leaveType;
-    }
+	public void setLeaveType(String leaveType) {
+		this.leaveType = leaveType;
+	}
 
-    public java.sql.Date getStartDate() {
-        return startDate;
-    }
+	public java.sql.Date getStartDate() {
+		return startDate;
+	}
 
-    public void setStartDate(java.sql.Date startDate) {
-        this.startDate = startDate;
-    }
+	public void setStartDate(java.sql.Date startDate) {
+		this.startDate = startDate;
+	}
 
-    public java.sql.Date getEndDate() {
-        return endDate;
-    }
+	public java.sql.Date getEndDate() {
+		return endDate;
+	}
 
-    public void setEndDate(java.sql.Date endDate) {
-        this.endDate = endDate;
-    }
+	public void setEndDate(java.sql.Date endDate) {
+		this.endDate = endDate;
+	}
 
-    public LeaveStatus getStatus() {
-        return status;
-    }
+	public int getDays() {
+		return days;
+	}
 
-    public void setStatus(LeaveStatus status) {
-        this.status = status;
-    }
+	public void setDays(int days) {
+		this.days = days;
+	}
 
-    public boolean isApproved() {
-        return this.status == LeaveStatus.APPROVED;
-    }
+	public LeaveStatus getStatus() {
+		return status;
+	}
 
+	public void setStatus(LeaveStatus status) {
+		this.status = status;
+	}
     public void approve() {
         this.status = LeaveStatus.APPROVED;
     }
@@ -108,16 +118,11 @@ public class Leaves {
         this.status = LeaveStatus.REJECTED;
     }
 
-    // toString Method
-    @Override
-    public String toString() {
-        return "Leave{" +
-                "leaveId=" + leaveId +
-                ", employee=" + employee.getFirstName() + " " + employee.getLastName() +
-                ", leaveType='" + leaveType + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", status=" + status +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "Leaves [leaveId=" + leaveId + ", employee=" + employee + ", leaveType=" + leaveType + ", startDate="
+				+ startDate + ", endDate=" + endDate + ", days=" + days + ", status=" + status + "]";
+	}
+    
+
 }

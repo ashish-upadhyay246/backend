@@ -51,11 +51,18 @@ public class EmpService {
         }
     }
 
-    //request leave
+    //request for leave
     public Leaves requestLeave(int employeeId, Leaves leaveRequest) {
         Optional<Employee> optionalEmployee = employeeRepository.findById(employeeId);
         if (optionalEmployee.isPresent()) {
-            leaveRequest.setEmployee(optionalEmployee.get());
+            Employee employee = optionalEmployee.get();
+            long daysBetween = java.time.Duration.between(leaveRequest.getStartDate().toLocalDate().atStartOfDay(),
+                                                         leaveRequest.getEndDate().toLocalDate().atStartOfDay()).toDays();
+            leaveRequest.setDays((int) daysBetween + 1);
+
+            if (leaveRequest.getDays() > employee.getLeavesLeft()) {
+                throw new IllegalArgumentException("The available leaves for the year are not enough. Please contact your manager.");
+            }
             if (leaveRequest.getStatus() == null) {
                 leaveRequest.setStatus(LeaveStatus.PENDING);
             }
@@ -64,6 +71,7 @@ public class EmpService {
             return null;
         }
     }
+
 
     //get leaves by employee ID
     public List<Leaves> getLeavesByEmployee(int empId) {
