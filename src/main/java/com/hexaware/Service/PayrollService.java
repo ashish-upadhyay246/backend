@@ -28,7 +28,7 @@ public class PayrollService implements PayrollInterface {
     private AuditRepository auditRepository;
 
     @Autowired
-    private UserService userService;  // Service to get the current logged-in user
+    private UserService userService;
 
     private static final double HR_DEPARTMENT_RATE = 50.0;
     private static final double IT_DEPARTMENT_RATE = 70.0;
@@ -36,17 +36,17 @@ public class PayrollService implements PayrollInterface {
     private static final double DEVELOPER_DEPARTMENT_RATE = 80.0;
     private static final double FINANCE_DEPARTMENT_RATE = 65.0;
 
+    //remove payroll
     @Override
     public void removePayroll(int payrollId) {
         Payroll payroll = payrollRepo.findById(payrollId)
                 .orElseThrow(() -> new RuntimeException("Payroll not found"));
         
         payrollRepo.delete(payroll);
-
-        // Log the audit event
         logAudit("Deleted payroll for Employee ID: " + payroll.getEmployee().getEmpId());
     }
 
+    //update payroll
     @Override
     public Payroll updatePayroll(int payrollId, PayrollDTO updatedPayrollDTO) {
         Payroll existingPayroll = payrollRepo.findById(payrollId)
@@ -64,13 +64,12 @@ public class PayrollService implements PayrollInterface {
         existingPayroll.setHoursWorked(updatedPayrollDTO.getHoursWorked());
 
         Payroll updatedPayroll = payrollRepo.save(existingPayroll);
-
-        // Log the audit event
         logAudit("Updated payroll for Employee ID: " + updatedPayroll.getEmployee().getEmpId());
 
         return updatedPayroll;
     }
 
+    //calculate payroll
     @Override
     public Payroll calculatePayroll(PayrollDTO payrollDTO) {
         Employee employee = employeeRepo.findById(payrollDTO.getEmployeeId())
@@ -94,8 +93,6 @@ public class PayrollService implements PayrollInterface {
         payroll.setHoursWorked(payrollDTO.getHoursWorked());
 
         Payroll savedPayroll = payrollRepo.save(payroll);
-
-        // Log the audit event
         logAudit("Calculated payroll for Employee ID: " + savedPayroll.getEmployee().getEmpId());
 
         return savedPayroll;
@@ -145,16 +142,10 @@ public class PayrollService implements PayrollInterface {
     public List<Audit> getPayrollAuditLogs() {
         return auditRepository.findByActionContaining("payroll");
     }
-
-    // Helper method to log audit events
+    
     private void logAudit(String actionDescription) {
-        // Get the current logged-in user (e.g., payroll manager)
         Users currentUser = userService.getCurrentLoggedInUser();
-
-        // Create an Audit log entry
         Audit auditLog = new Audit(actionDescription, currentUser, new java.sql.Timestamp(System.currentTimeMillis()));
-
-        // Save the audit log
         auditRepository.save(auditLog);
     }
 }
