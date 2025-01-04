@@ -18,7 +18,7 @@ public class PayrollService {
 
     @Autowired PayrollRepo payrollRepo;
     @Autowired EmployeeRepo employeeRepo;
-    @Autowired AuditRepository auditRepository;
+    @Autowired AuditRepository auditRepo;
     @Autowired UserService userService;
 
     private static final double HR_DEPARTMENT_RATE = 50.0;
@@ -142,14 +142,14 @@ public class PayrollService {
 
     //get payroll audit logs
     public List<Audit> getPayrollAuditLogs() {
-        return auditRepository.findByActionContaining("payroll");
+        return auditRepo.findByActionContaining("payroll");
     }
     
     //log audit
     private void logAudit(String actionDescription) {
         Users currentUser = userService.getCurrentLoggedInUser();
         Audit auditLog = new Audit(actionDescription, currentUser, new java.sql.Timestamp(System.currentTimeMillis()));
-        auditRepository.save(auditLog);
+        auditRepo.save(auditLog);
     }
 
 }

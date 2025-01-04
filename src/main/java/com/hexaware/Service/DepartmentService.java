@@ -9,11 +9,11 @@ import com.hexaware.Repository.DepartmentRepo;
 @Service
 public class DepartmentService {
 
-	@Autowired DepartmentRepo drep;
+	@Autowired DepartmentRepo deptRepo;
 
 	//add department
 	public Department add(Department d) {
-		return drep.save(d);
+		return deptRepo.save(d);
 	}
 	
 	

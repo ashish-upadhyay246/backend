@@ -28,73 +28,72 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService{
 
-    @Autowired
-    UserRepo rep;
-    
-    @Autowired
-    EmployeeRepo employeeRepo;
-    
-    @Autowired
-    DepartmentRepo departmentRepo;
-    
-    @Autowired
-    LeaveRepo leaveRepo;
-    
-    @Autowired
-	JWTService service;
-    
-	@Autowired
-	AuthenticationManager authManager;
+    @Autowired UserRepo userRepo;
+    @Autowired EmployeeRepo employeeRepo;
+    @Autowired DepartmentRepo departmentRepo;
+    @Autowired LeaveRepo leaveRepo;
+    @Autowired JWTService service;
+	@Autowired AuthenticationManager authManager;
 	
 	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     
-    //(admin) register
+    //register user
     public Users admin_addUser(Users u) {
         Users user = new Users(u.getUsername(), u.getPassword(), u.getRole());
         user.setPassword(encoder.encode(user.getPassword()));
-        Users savedUser = rep.save(user);
+        Users savedUser = userRepo.save(user);
         return savedUser;
+    }
+    
+    //verify at login
+    public String verify(Users u) {
+        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(u.getUsername(), u.getPassword()));
+        if (authentication.isAuthenticated()) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            return service.generateToken(userDetails);
+        }
+        throw new RuntimeException("Authentication failed");
     }
 
     //edit user name
     public String admin_editUserName(String uname, String newname) {
-        Users user = rep.findByUsername(uname);
+        Users user = userRepo.findByUsername(uname);
         if (user == null) {
             return "User not found";
         }
-        if (rep.findByUsername(newname) != null) {
+        if (userRepo.findByUsername(newname) != null) {
             return "Username already exists";
         }
         user.setUsername(newname);
-        rep.save(user);
+        userRepo.save(user);
         return "Username updated.";
     }
 
     //edit user role
     public String admin_editUserRole(String currentUsername, Role newRole) {
-        Users user = rep.findByUsername(currentUsername);
+        Users user = userRepo.findByUsername(currentUsername);
         if (user == null) {
             return "User not found";
         }
         user.setRole(newRole);
-        rep.save(user);
+        userRepo.save(user);
         return "User role updated.";
     }
 
     //edit user password
     public String admin_editUserPwd(String currentUsername, String pwd) {
-        Users user = rep.findByUsername(currentUsername);
+        Users user = userRepo.findByUsername(currentUsername);
         if (user == null) {
             return "User not found";
         }
         user.setPassword(encoder.encode(pwd));
-        rep.save(user);
+        userRepo.save(user);
         return "User password updated.";
     }
     
     //add an employee
     public Employee createEmployee(Employee e, int dId, int uId) {
-    	Users u=rep.findByUserId(uId);
+    	Users u=userRepo.findByUserId(uId);
         Department d=departmentRepo.findByDeptId(dId);
         System.out.println(d);
         e.setUser(u);
@@ -102,11 +101,9 @@ public class UserService{
         return employeeRepo.save(e);
     }
     
-    
-
     //get all users
     public List<Users> admin_showAll() {
-        return rep.findAll();
+        return userRepo.findAll();
     }
     
     //get all employees
@@ -116,7 +113,7 @@ public class UserService{
 
     //get specific user
     public Users admin_getDataById(int userID) {
-        Users user = rep.findByUserId(userID);
+        Users user = userRepo.findByUserId(userID);
         return user;
     }
     
@@ -162,7 +159,7 @@ public class UserService{
         Employee employee = leave.getEmployee();
         if (approved) {
             leave.setStatus(LeaveStatus.APPROVED);
-            employee.setLeavesLeft(employee.getLeavesLeft() - leave.getDays()); // Update leavesLeft
+            employee.setLeavesLeft(employee.getLeavesLeft() - leave.getDays());
         } else {
             leave.setStatus(LeaveStatus.REJECTED);
         }
@@ -170,7 +167,6 @@ public class UserService{
         return leaveRepo.save(leave);
     }
 
-    
     //update department of employee
     public void updateEmployeeDepartment(int employeeId, int departmentId) {
         Employee employee = employeeRepo.findById(employeeId).orElseThrow(() -> new EntityNotFoundException("Employee with ID " + employeeId + " not found."));
@@ -181,29 +177,16 @@ public class UserService{
 
     //remove user
     public String admin_removeUser(int userID) {
-        Users user = rep.findById(userID).orElse(null);
+        Users user = userRepo.findById(userID).orElse(null);
         if (user == null) {
             return "User does not exist.";
         }
-        rep.deleteById(userID);
+        userRepo.deleteById(userID);
         return "User removed successfully";
-    }
-
-    //Verify
-    public String verify(Users u) {
-        Authentication authentication = authManager.authenticate(
-            new UsernamePasswordAuthenticationToken(u.getUsername(), u.getPassword())
-        );
-        if (authentication.isAuthenticated()) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            return service.generateToken(userDetails);
-        }
-
-        throw new RuntimeException("Authentication failed");
     }
     
     public String getRole(String username) {
-        Users user = rep.findByUsername(username);
+        Users user = userRepo.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
@@ -213,17 +196,11 @@ public class UserService{
     public Users getCurrentLoggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        return rep.findByUsername(username);
+        return userRepo.findByUsername(username);
     }
     
 	public Users getUserByUsername(String name) {
-		return rep.getUserByUsername(name);
-
-	}
-
-	public Department getDept(int id) {
-		
-		return departmentRepo.findByDeptId(id);
+		return userRepo.getUserByUsername(name);
 	}
 
 	//remove employee
@@ -232,7 +209,7 @@ public class UserService{
         if (e == null) {
             return "Employee does not exist.";
         }
-        rep.deleteById(empID);
+        userRepo.deleteById(empID);
         return "Employee removed successfully";
     }
 }

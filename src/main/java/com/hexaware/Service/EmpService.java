@@ -19,26 +19,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmpService {
 
-    @Autowired EmployeeRepo employeeRepository;
-    @Autowired LeaveRepo leaveRepository;
+    @Autowired EmployeeRepo employeeRepo;
+    @Autowired LeaveRepo leaveRepo;
     @Autowired PayrollRepo payrollRepo;
     
-
     //fetch employee by employee id
 	public Employee getEmployeeByUserId(int id) {
-		return employeeRepository.findByEmpId(id);
+		return employeeRepo.findByEmpId(id);
 	}
 
     //update employee details    
     public Employee updatePersonalInfo(int id, Employee info) {
-        Optional<Employee> emp = employeeRepository.findById(id);
+        Optional<Employee> emp = employeeRepo.findById(id);
         if (emp.isPresent()) {
             Employee existingEmployee = emp.get();
             existingEmployee.setFirstName(info.getFirstName());
             existingEmployee.setLastName(info.getLastName());
             existingEmployee.setEmail(info.getEmail());
             existingEmployee.setPhoneNumber(info.getPhoneNumber());
-            Employee updatedEmployee = employeeRepository.save(existingEmployee);
+            Employee updatedEmployee = employeeRepo.save(existingEmployee);
             return updatedEmployee;
         } else {
             return null;
@@ -47,7 +46,7 @@ public class EmpService {
 
     //request for leave
     public Leaves requestLeave(int employeeId, Leaves leaveRequest) {
-        Optional<Employee> optionalEmployee = employeeRepository.findById(employeeId);
+        Optional<Employee> optionalEmployee = employeeRepo.findById(employeeId);
         if (optionalEmployee.isPresent()) {
             Employee employee = optionalEmployee.get();
             long daysBetween = java.time.Duration.between(leaveRequest.getStartDate().toLocalDate().atStartOfDay(),
@@ -60,7 +59,7 @@ public class EmpService {
             if (leaveRequest.getStatus() == null) {
                 leaveRequest.setStatus(LeaveStatus.PENDING);
             }
-            return leaveRepository.save(leaveRequest);
+            return leaveRepo.save(leaveRequest);
         } else {
             return null;
         }
@@ -68,7 +67,7 @@ public class EmpService {
 
     //get leaves by employee ID
     public List<Leaves> getLeavesByEmployee(int empId) {
-        return leaveRepository.findByEmployee(empId);
+        return leaveRepo.findByEmployee(empId);
     }
     
     //get payroll by employee ID

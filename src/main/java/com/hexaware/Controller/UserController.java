@@ -1,6 +1,5 @@
 package com.hexaware.Controller;
 
-import com.hexaware.Entity.Department;
 import com.hexaware.Entity.Employee;
 import com.hexaware.Entity.Leaves;
 import com.hexaware.Entity.Users;
@@ -203,17 +202,5 @@ public class UserController {
             throw new UserNotFoundException("Employee with ID '" + empID + "' not found");
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-    
-    @GetMapping("/dept/{id}")
-    public ResponseEntity<?> fetchDept (@PathVariable int id) {
-    	Department d = userService.getDept(id);
-    	if (d!=null)
-    	{
-    		return new ResponseEntity<>(d, HttpStatus.OK);
-    	}
-    	else {
-    		throw new UserNotFoundException("User with ID '" + id + "' not found");
-    	}
     }
 }

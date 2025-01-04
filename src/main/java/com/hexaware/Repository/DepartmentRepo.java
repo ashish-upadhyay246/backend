@@ -9,5 +9,4 @@ import com.hexaware.Entity.Department;
 public interface DepartmentRepo extends JpaRepository<Department, Integer> {
 
 	Department findByDeptId(int deptId);
-
 }
