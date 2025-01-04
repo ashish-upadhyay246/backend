@@ -11,9 +11,9 @@ public interface UserRepo extends JpaRepository<Users, Integer> {
 	@Query("select u from Users u where u.username = :username")
 	Users findByUsername(String username);
 	
-	@Query("select u from Users u where u.userId=:user_id")
+	@Query("select u from Users u where u.userId= :user_id")
 	Users findByUserId(int user_id);
 	
-	@Query("Select u from Users u where u.username=?1")
+	@Query("Select u from Users u where u.username= :name")
 	Users getUserByUsername(String name);
 }
