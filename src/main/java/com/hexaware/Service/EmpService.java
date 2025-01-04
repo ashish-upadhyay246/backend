@@ -19,14 +19,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmpService {
 
-    @Autowired
-    private EmployeeRepo employeeRepository;
-
-    @Autowired
-    private LeaveRepo leaveRepository;
-    
-    @Autowired
-    private PayrollRepo payrollRepo;
+    @Autowired EmployeeRepo employeeRepository;
+    @Autowired LeaveRepo leaveRepository;
+    @Autowired PayrollRepo payrollRepo;
     
 
     //fetch employee by employee id
@@ -73,7 +68,7 @@ public class EmpService {
 
     //get leaves by employee ID
     public List<Leaves> getLeavesByEmployee(int empId) {
-        return leaveRepository.findByEmployee_EmpId(empId);
+        return leaveRepository.findByEmployee(empId);
     }
     
     //get payroll by employee ID
