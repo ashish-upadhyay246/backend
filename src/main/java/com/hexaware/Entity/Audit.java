@@ -3,18 +3,16 @@ package com.hexaware.Entity;
 import jakarta.persistence.*;
 import java.sql.Timestamp;
 
-
 @Entity
-@Table(name = "audit")
 public class Audit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int logId;
-
+    
     private String action;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Users user;;
 
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -61,13 +59,9 @@ public class Audit {
         this.timestamp = timestamp;
     }
 
-    @Override
-    public String toString() {
-        return "AuditLog{" +
-                "logId=" + logId +
-                ", action='" + action + '\'' +
-                ", user=" + user.getUsername() +
-                ", timestamp=" + timestamp +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "Audit [logId=" + logId + ", action=" + action + ", user=" + user + ", timestamp=" + timestamp + "]";
+	}
+
 }
