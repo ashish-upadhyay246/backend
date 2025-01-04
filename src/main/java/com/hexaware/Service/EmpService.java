@@ -2,14 +2,13 @@ package com.hexaware.Service;
 
 import com.hexaware.Entity.Employee;
 
+
 import com.hexaware.Entity.Leaves;
 import com.hexaware.Entity.Leaves.LeaveStatus;
 import com.hexaware.Entity.Payroll;
-import com.hexaware.Exceptions.EmployeeCustomExceptions.EmployeeNotFoundException;
 import com.hexaware.Repository.EmployeeRepo;
 import com.hexaware.Repository.LeaveRepo;
 import com.hexaware.Repository.PayrollRepo;
-import com.hexaware.DTO.EmployeeDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +31,7 @@ public class EmpService {
 
     //fetch employee by employee id
 	public Employee getEmployeeByUserId(int id) {
-		return employeeRepository.getByUserId(id);
+		return employeeRepository.findByEmpId(id);
 	}
 
     //update employee details    
@@ -56,14 +55,10 @@ public class EmpService {
         Optional<Employee> optionalEmployee = employeeRepository.findById(employeeId);
         if (optionalEmployee.isPresent()) {
             Employee employee = optionalEmployee.get();
-
             long daysBetween = java.time.Duration.between(leaveRequest.getStartDate().toLocalDate().atStartOfDay(),
                                                          leaveRequest.getEndDate().toLocalDate().atStartOfDay()).toDays();
             leaveRequest.setDays((int) daysBetween + 1);
-
-            // Set the employee reference in the leaveRequest entity
             leaveRequest.setEmployee(employee);
-
             if (leaveRequest.getDays() > employee.getLeavesLeft()) {
                 throw new IllegalArgumentException("The available leaves for the year are not enough. Please contact your manager.");
             }
@@ -75,8 +70,6 @@ public class EmpService {
             return null;
         }
     }
-
-
 
     //get leaves by employee ID
     public List<Leaves> getLeavesByEmployee(int empId) {

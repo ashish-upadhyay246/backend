@@ -3,48 +3,42 @@ package com.hexaware.Entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "department")
 public class Department {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "dept_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int deptId;
 
-    @Column(name = "dept_name", length = 100, nullable = false, unique = true)
+    @Column(unique = true)
     private String deptName;
 
-    // Constructors
-    public Department() {
-    }
+	public int getDeptId() {
+		return deptId;
+	}
 
-    public Department(String deptName) {
-        this.deptName = deptName;
-    }
+	public void setDeptId(int deptId) {
+		this.deptId = deptId;
+	}
 
-    // Getters and Setters
-    public int getDeptId() {
-        return deptId;
-    }
+	public String getDeptName() {
+		return deptName;
+	}
 
-    public void setDeptId(int deptId) {
-        this.deptId = deptId;
-    }
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
 
-    public String getDeptName() {
-        return deptName;
-    }
+	public Department(int deptId, String deptName) {
+		super();
+		this.deptId = deptId;
+		this.deptName = deptName;
+	}
 
-    public void setDeptName(String deptName) {
-        this.deptName = deptName;
-    }
-
-    // toString Method (Optional, if needed)
-    @Override
-    public String toString() {
-        return "Department{" +
-                "deptId=" + deptId +
-                ", deptName='" + deptName + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "Department [deptId=" + deptId + ", deptName=" + deptName + "]";
+	}
+    
+    public Department() {}
+	
 }

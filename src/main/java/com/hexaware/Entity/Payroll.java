@@ -2,44 +2,25 @@ package com.hexaware.Entity;
 
 import java.util.Date;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "payroll")
 public class Payroll {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "payroll_id")
     private int payrollId;
 
-    @ManyToOne(cascade = { CascadeType.PERSIST,CascadeType.MERGE})
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "emp_id", referencedColumnName = "emp_id", nullable = false)
+    @ManyToOne
     private Employee employee;
 
-    @Column(name = "pay_date", nullable = false)
     private Date payDate;
-
-    @Column(name = "basic_salary", nullable = false)
     private double basicSalary;
-
-    @Column(name = "bonuses", nullable = false)
     private double bonuses = 0;
-
-    @Column(name = "deductions", nullable = false)
     private double deductions = 0;
-
-    @Column(name = "net_salary", nullable = false)
     private double netSalary;
-
-    @Column(name = "hours_worked", nullable = false)
     private double hoursWorked;
 
-    // Constructors
     public Payroll() {
     }
 
@@ -53,7 +34,6 @@ public class Payroll {
         this.hoursWorked = hoursWorked;
     }
 
-    // Getters and Setters
     public int getPayrollId() {
         return payrollId;
     }
@@ -118,18 +98,11 @@ public class Payroll {
         this.hoursWorked = hoursWorked;
     }
 
-    // toString Method (Optional)
+    
     @Override
-    public String toString() {
-        return "Payroll{" +
-                "payrollId=" + payrollId +
-                ", employee=" + employee.getFirstName() + " " + employee.getLastName() +
-                ", payDate=" + payDate +
-                ", basicSalary=" + basicSalary +
-                ", bonuses=" + bonuses +
-                ", deductions=" + deductions +
-                ", netSalary=" + netSalary +
-                ", hoursWorked=" + hoursWorked +
-                '}';
-    }
+	public String toString() {
+		return "Payroll [payrollId=" + payrollId + ", employee=" + employee + ", payDate=" + payDate + ", basicSalary="
+				+ basicSalary + ", bonuses=" + bonuses + ", deductions=" + deductions + ", netSalary=" + netSalary
+				+ ", hoursWorked=" + hoursWorked + "]";
+	}
 }

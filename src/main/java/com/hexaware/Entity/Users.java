@@ -1,35 +1,26 @@
 package com.hexaware.Entity;
 
 import jakarta.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "users")
-public class Users implements Serializable {
-
-    @Id
+public class Users {
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
     private int userId;
 
-    @Column(name = "username", length = 50, nullable = false, unique = true)
+    @Column(unique = true)
     private String username;
-
-    @Column(name = "password", length = 255, nullable = false)
     private String password;
 
-    @Column(name = "role", length = 20, nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    // Enum for role constraint
     public enum Role {
         ADMIN,
         EMPLOYEE,
         PAYROLL_MANAGER
     }
 
-    // Constructors
     public Users() {
     }
 
@@ -40,7 +31,6 @@ public class Users implements Serializable {
         this.username = username;
     }
 
-    // Getters and Setters
     public int getUserId() {
         return userId;
     }
@@ -73,7 +63,6 @@ public class Users implements Serializable {
         this.role = role;
     }
 
-    // toString Method
     @Override
     public String toString() {
         return "Users{" +

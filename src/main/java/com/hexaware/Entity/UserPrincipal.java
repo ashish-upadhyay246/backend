@@ -8,18 +8,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class UserPrincipal implements UserDetails {
 
-    private Users user;
+	private static final long serialVersionUID = 1L;
+	private Users user;
 
     public UserPrincipal(Users user) {
         this.user = user;
     }
-
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//    	 String role = user.getRole().name();
-//    	 System.out.println("Assigned Authority: " + role);
-//    	 return Collections.singleton(new SimpleGrantedAuthority(role));
-//    }
     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -27,7 +21,6 @@ public class UserPrincipal implements UserDetails {
         System.out.println("Assigned Authority: " + role);
         return Collections.singleton(new SimpleGrantedAuthority(role));
     }
-
 
     @Override
     public String getPassword() {

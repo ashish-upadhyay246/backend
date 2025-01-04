@@ -5,42 +5,29 @@ import java.sql.Date;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "leaves")
 public class Leaves {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "leave_id")
     private int leaveId;
 
     @ManyToOne
-    @JoinColumn(name = "emp_id", nullable = false)
     private Employee employee;
 
-    @Column(name = "leave_type", length = 50, nullable = false)
     private String leaveType;
-
-    @Column(name = "start_date", nullable = false)
     private Date startDate;
-
-    @Column(name = "end_date", nullable = false)
     private Date endDate;
-
-    @Column(name = "days", nullable = false)
     private int days;
 
-    @Column(name = "status", length = 20, nullable = false)
     @Enumerated(EnumType.STRING)
     private LeaveStatus status;
 
-    // Enum for leave status
     public enum LeaveStatus {
         PENDING,
         APPROVED,
         REJECTED
     }
 
-    // Constructors
     public Leaves() {
     }
 
@@ -54,8 +41,7 @@ public class Leaves {
         this.days = days;
         this.status = status;
     }
-
-    // Getters and Setters
+    
     public int getLeaveId() {
         return leaveId;
     }

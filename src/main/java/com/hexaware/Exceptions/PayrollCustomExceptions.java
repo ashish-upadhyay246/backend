@@ -3,19 +3,25 @@ package com.hexaware.Exceptions;
 public class PayrollCustomExceptions {
 
 	public static class PayrollNotFoundException extends RuntimeException {
-	    public PayrollNotFoundException(String message) {
+		private static final long serialVersionUID = 1L;
+
+		public PayrollNotFoundException(String message) {
 	        super(message);
 	    }
 	}
 
 	public static class PayrollCreationFailedException extends RuntimeException {
-	    public PayrollCreationFailedException(String message) {
+		private static final long serialVersionUID = 1L;
+
+		public PayrollCreationFailedException(String message) {
 	        super(message);
 	    }
 	}
 
 	public static class PayrollUpdateFailedException extends RuntimeException {
-	    public PayrollUpdateFailedException(String message) {
+		private static final long serialVersionUID = 1L;
+
+		public PayrollUpdateFailedException(String message) {
 	        super(message);
 	    }
 	}

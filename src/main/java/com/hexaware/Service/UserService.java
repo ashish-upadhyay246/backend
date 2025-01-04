@@ -1,8 +1,5 @@
 package com.hexaware.Service;
 
-import com.hexaware.DTO.EmployeeDTO;
-
-import com.hexaware.DTO.UserDTO;
 import com.hexaware.Entity.Department;
 import com.hexaware.Entity.Employee;
 import com.hexaware.Entity.Leaves;
@@ -17,9 +14,7 @@ import com.hexaware.Repository.UserRepo;
 import jakarta.persistence.EntityNotFoundException;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,31 +43,29 @@ public class UserService{
     @Autowired
 	JWTService service;
     
-    @Autowired
-    private ModelMapper mp;
-	//comment
 	@Autowired
 	AuthenticationManager authManager;
+	
 	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     
     //(admin) register
-    public Users admin_addUser(UserDTO userDTO) {
-        Users user = new Users(userDTO.getUsername(), userDTO.getPassword(), Users.Role.valueOf(userDTO.getRole()));
+    public Users admin_addUser(Users u) {
+        Users user = new Users(u.getUsername(), u.getPassword(), u.getRole());
         user.setPassword(encoder.encode(user.getPassword()));
         Users savedUser = rep.save(user);
         return savedUser;
     }
 
     //edit user name
-    public String admin_editUserName(String currentUsername, String newUsername) {
-        Users user = rep.findByUsername(currentUsername);
+    public String admin_editUserName(String uname, String newname) {
+        Users user = rep.findByUsername(uname);
         if (user == null) {
             return "User not found";
         }
-        if (rep.findByUsername(newUsername) != null) {
+        if (rep.findByUsername(newname) != null) {
             return "Username already exists";
         }
-        user.setUsername(newUsername);
+        user.setUsername(newname);
         rep.save(user);
         return "Username updated.";
     }
@@ -100,14 +93,13 @@ public class UserService{
     }
     
     //add an employee
-    public EmployeeDTO createEmployee(EmployeeDTO employeeDTO) {
-        
-        Employee employee = mp.map(employeeDTO, Employee.class);
-        Department d=departmentRepo.findByDeptId(employeeDTO.getDepartmentId());
-        employee.setDepartment(d);
-        Employee savedEmployee = employeeRepo.save(employee);
-
-        return mp.map(savedEmployee, EmployeeDTO.class);
+    public Employee createEmployee(Employee e, int dId, int uId) {
+    	Users u=rep.findByUserId(uId);
+        Department d=departmentRepo.findByDeptId(dId);
+        System.out.println(d);
+        e.setUser(u);
+        e.setDepartment(d);
+        return employeeRepo.save(e);
     }
     
     
@@ -138,10 +130,10 @@ public class UserService{
     }
     
     //get employees by department
-    public List<Employee> getEmployeesByDepartment(int departmentId) {
-        Department department = departmentRepo.findById(departmentId)
-                .orElseThrow(() -> new RuntimeException("Department not found"));
-        List<Employee> employees = employeeRepo.findByDepartment(department.getDeptId());
+    public List<Employee> getEmployeesByDepartment(int dId) {
+        Department department = departmentRepo.findById(dId).orElseThrow(() -> new RuntimeException("Department not found"));
+        int d=department.getDeptId();
+        List<Employee> employees = employeeRepo.findByDepartment(d);
         return employees;
     }
     
@@ -150,29 +142,14 @@ public class UserService{
         return leaveRepo.findAll();
     }
     
-    //get total number of employees
-    public long getTotalEmployees() {
-        return rep.countTotalEmployees();
-    }
-    
-    //get total number of payroll managers
-    public long getTotalPayrollManager() {
-        return rep.countTotalPayrollManager();
-    }
-    
-    //get total number of admins
-    public long getTotalAdmin() {
-        return rep.countTotalAdmin();
-    }
-    
     //update employee salary
-    public Employee updateEmployeeSalary(int employeeId, double newSalary) {
-        Employee employee = employeeRepo.findById(employeeId).orElse(null);
-        if (employee == null) {
+    public Employee updateEmployeeSalary(int empId, double newSalary) {
+        Employee e = employeeRepo.findById(empId).orElse(null);
+        if (e == null) {
             throw new RuntimeException("Employee not found");
         }
-        employee.setSalary(newSalary);
-        Employee updatedEmployee = employeeRepo.save(employee);
+        e.setSalary(newSalary);
+        Employee updatedEmployee = employeeRepo.save(e);
         return updatedEmployee;
     }
     

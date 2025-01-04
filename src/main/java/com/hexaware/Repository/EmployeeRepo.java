@@ -13,14 +13,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
     
-    @Query(value = "SELECT * FROM Employee WHERE dept_id = :departmentId", nativeQuery = true)
+    @Query("select e from Employee e where e.department.deptId = :departmentId")
     List<Employee> findByDepartment(@Param("departmentId") int departmentId);
 
-    @Query("SELECT e FROM Employee e WHERE e.firstName = :firstName")
+    @Query("select e from Employee e where e.firstName = :firstName")
     Optional<Employee> findByFirstName(@Param("firstName") String firstName);
 
-    @Query("Select e from Employee e where e.user.userId=?1")
-	Employee getByUserId(int id);
-
+    @Query("select e from Employee e where e.user.userId=:id")
+	Employee findByEmpId(int id);
 }
-

@@ -10,7 +10,7 @@ public class Swagger {
 	@Bean
 	OpenAPI getOpenAPi() {
 		Info info = new Info();
-		info.setTitle("API Documentation with Swagger");
+		info.setTitle("EasyPay Payroll Management");
 		OpenAPI api = new OpenAPI();
 		api.setInfo(info);
 		return api;
