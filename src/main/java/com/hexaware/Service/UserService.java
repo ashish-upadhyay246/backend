@@ -6,9 +6,11 @@ import com.hexaware.Entity.Leaves;
 import com.hexaware.Entity.Leaves.LeaveStatus;
 import com.hexaware.Entity.Users;
 import com.hexaware.Entity.Users.Role;
+import com.hexaware.Exceptions.EmployeeCustomExceptions.EmployeeNotFoundException;
 import com.hexaware.Repository.DepartmentRepo;
 import com.hexaware.Repository.EmployeeRepo;
 import com.hexaware.Repository.LeaveRepo;
+import com.hexaware.Repository.PayrollRepo;
 import com.hexaware.Repository.UserRepo;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -32,6 +34,7 @@ public class UserService{
     @Autowired EmployeeRepo employeeRepo;
     @Autowired DepartmentRepo departmentRepo;
     @Autowired LeaveRepo leaveRepo;
+    @Autowired PayrollRepo payrollRepo;
     @Autowired JWTService service;
 	@Autowired AuthenticationManager authManager;
 	
@@ -206,10 +209,14 @@ public class UserService{
 	//remove employee
     public String admin_removeEmp(int empID) {
         Employee e = employeeRepo.findById(empID).orElse(null);
-        if (e == null) {
-            return "Employee does not exist.";
+        leaveRepo.deleteByEmployee(e);
+        payrollRepo.deleteByEmployee(e);
+        if (e != null) {
+            employeeRepo.deleteById(empID);
+            return "Employee removed successfully.";
         }
-        userRepo.deleteById(empID);
-        return "Employee removed successfully";
+        else{
+        	throw new EmployeeNotFoundException("Employee with ID: "+empID+" does not exist!");
+        }
     }
 }
